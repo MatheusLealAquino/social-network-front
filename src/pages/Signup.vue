@@ -76,8 +76,7 @@
           label="Digite sua senha *"
           lazy-rules
           :rules="[
-            (val) =>
-              (val !== null && val !== '') || 'Por favor, digite sua senha',
+            (val) => (val && val.length > 5) || 'Por favor, digite sua senha',
           ]"
         />
 
