@@ -3,7 +3,17 @@
     <q-page class="q-pa-md" style="width: 100%; max-width: 600px">
       <p class="q-pb-sm">Faça seu cadastro, é grátis e sempre será!</p>
 
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-sm">
+        <q-input
+          filled
+          v-model="name"
+          label="Digite seu nome e sobrenome *"
+          lazy-rules
+          :rules="[
+            (val) => (val && val.length > 0) || 'Por favor, digite algo',
+          ]"
+        />
+
         <q-input
           filled
           type="email"
@@ -17,21 +27,10 @@
 
         <q-input
           filled
-          v-model="name"
-          label="Digite seu nome *"
-          hint="Nome e sobrenome"
-          lazy-rules
-          :rules="[
-            (val) => (val && val.length > 0) || 'Por favor, digite algo',
-          ]"
-        />
-
-        <q-input
-          filled
           type="date"
           v-model="birthday"
-          label="Data de nascimento *"
           lazy-rules
+          hint="Data de nascimento *"
           :rules="[
             (val) =>
               (val !== null && val !== '') ||
@@ -42,13 +41,33 @@
           ]"
         />
 
-        <q-select v-model="gender" :options="genderOptions" label="Gênero" />
+        <div class="row q-gutter-md q-px-sm">
+          <div class="col">
+            <q-select
+              v-model="gender"
+              :options="genderOptions"
+              label="Gênero *"
+              :rules="[
+                (val) =>
+                  (val !== null && val !== '') ||
+                  'Por favor, escolha seu gênero',
+              ]"
+            />
+          </div>
 
-        <q-select
-          v-model="relationshipStatus"
-          :options="relationshipStatuses"
-          label="Estado de relacionamento"
-        />
+          <div class="col">
+            <q-select
+              v-model="relationshipStatus"
+              :options="relationshipStatuses"
+              label="Estado de relacionamento *"
+              :rules="[
+                (val) =>
+                  (val !== null && val !== '') ||
+                  'Por favor, escolha um estado de relacionamento',
+              ]"
+            />
+          </div>
+        </div>
 
         <q-input
           filled

@@ -11,7 +11,9 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Rede Social </q-toolbar-title>
+        <q-toolbar-title>Rede Social</q-toolbar-title>
+
+        <q-btn flat round dense to="/signup">Cadastre-se</q-btn>
       </q-toolbar>
     </q-header>
 
