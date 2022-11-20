@@ -1,49 +1,78 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="row items-center justify-evenly q-px-lg">
+    <div class="col q-pa-lg">
+      <p class="q-pb-sm">Já possui conta? Faça seu login.</p>
+
+      <q-form @submit="onSubmit" class="q-gutter-md">
+        <q-input
+          filled
+          v-model="email"
+          label="Digite seu email *"
+          lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Digite seu email']"
+        />
+
+        <q-input
+          filled
+          type="password"
+          v-model="password"
+          label="Digite sua senha *"
+          lazy-rules
+          :rules="[(val) => (val !== null && val !== '') || 'Digite sua senha']"
+        />
+
+        <div>
+          <q-btn
+            label="Entrar"
+            class="full-width q-mb-sm"
+            type="submit"
+            color="primary"
+          />
+        </div>
+      </q-form>
+    </div>
+
+    <div class="col q-pa-lg">
+      <p>
+        Ainda não possui conta?
+        <a href="/#/signup" style="text-decoration: none">Faça seu cadastro.</a>
+      </p>
+
+      <h4>
+        A rede social ajuda você a se conectar e compartilhar com as pessoas que
+        fazem parte da sua vida.
+      </h4>
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
 import { defineComponent, ref } from 'vue';
+
+import { useUserStore } from 'stores/user';
 
 export default defineComponent({
   name: 'IndexPage',
-  components: { ExampleComponent },
-  setup () {
-    const todos = ref<Todo[]>([
-      {
-        id: 1,
-        content: 'ct1'
+  setup() {
+    const userStore = useUserStore();
+
+    const email = ref(null);
+    const password = ref(null);
+
+    return {
+      email,
+      password,
+
+      async onSubmit() {
+        const emailValue = email.value as unknown as string;
+        const passwordValue = password.value as unknown as string;
+
+        await userStore.login({
+          email: emailValue,
+          password: passwordValue,
+        });
       },
-      {
-        id: 2,
-        content: 'ct2'
-      },
-      {
-        id: 3,
-        content: 'ct3'
-      },
-      {
-        id: 4,
-        content: 'ct4'
-      },
-      {
-        id: 5,
-        content: 'ct5'
-      }
-    ]);
-    const meta = ref<Meta>({
-      totalCount: 1200
-    });
-    return { todos, meta };
-  }
+    };
+  },
 });
 </script>
