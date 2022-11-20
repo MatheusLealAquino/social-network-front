@@ -100,13 +100,15 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useQuasar } from 'quasar';
-import { api } from 'boot/axios';
+
+import { useUserStore } from 'stores/user';
 
 export default defineComponent({
-  name: 'IndexPage',
+  name: 'SignupPage',
   components: {},
   setup() {
     const $q = useQuasar();
+    const userStore = useUserStore();
 
     const name = ref(null);
     const birthday = ref(null);
@@ -160,34 +162,28 @@ export default defineComponent({
           const relationshipStatusWidow =
             genderObj.value === 'male' ? 'widow' : 'widower';
 
+          const emailValue = email.value as unknown as string;
           const nameValue = name?.value as unknown as string;
           const nameSplitted = nameValue.split(' ');
 
           const firstName = nameSplitted[0];
           const lastName = nameSplitted.slice(1).join();
-          const birthdayValue = birthday.value;
-          const genderValue = genderObj.value;
-          const passwordValue = password.value;
+          const birthdayValue = birthday.value as unknown as string;
+          const genderValue = genderObj.value as unknown as string;
+          const passwordValue = password.value as unknown as string;
           const relationshipStatusValue =
             relationshipStatusObj.value === 'widower'
               ? relationshipStatusWidow
-              : relationshipStatusObj.value;
+              : (relationshipStatusObj.value as unknown as string);
 
-          await api.post('/user/', {
-            email: email.value,
+          await userStore.signup({
+            email: emailValue,
             firstName,
             lastName,
             birthday: birthdayValue,
             gender: genderValue,
             password: passwordValue,
             relationshipStatus: relationshipStatusValue,
-          });
-
-          $q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'Cadastro realizado com sucesso! Redirecionando...',
           });
         }
       },
@@ -196,6 +192,9 @@ export default defineComponent({
         name.value = null;
         birthday.value = null;
         accept.value = false;
+        gender.value = null;
+        password.value = null;
+        gender.value = null;
       },
     };
   },
