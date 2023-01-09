@@ -5,6 +5,7 @@ import { Notify } from 'quasar';
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: null,
+    userId: null,
   }),
   getters: {
     getToken: (state) => state.token,
@@ -17,7 +18,9 @@ export const useUserStore = defineStore('user', {
           password,
         });
 
-        this.token = output.data.token;
+        const { token, userId } = output.data.data;
+        this.token = token;
+        this.userId = userId;
 
         Notify.create({
           color: 'green-4',
@@ -25,6 +28,8 @@ export const useUserStore = defineStore('user', {
           icon: 'cloud_done',
           message: 'Login realizado com sucesso! Redirecionando...',
         });
+
+        this.router.push(`user/${userId}`);
       } catch {
         Notify.create({
           color: 'red-5',
